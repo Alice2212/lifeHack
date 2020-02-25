@@ -1,0 +1,39 @@
+contract LifeHack =
+    record lifeHack = {
+        name : string,
+        ownerAddress : address,
+        description : string,
+        image : string
+        }
+
+    record state = {
+        lifeHacks : map (int, lifeHack),
+        numberOfHacks : int
+        }
+
+
+
+    entrypoint init() = {lifeHacks = {}, numberOfHacks = 0}
+
+    entrypoint getNumberOfHacks() = 
+        state.numberOfHacks
+
+    stateful entrypoint addHack(
+        name': string, 
+        // ownerAddress': address, 
+        description': string,
+        image': string ) =
+
+            let newHack = {
+                name = name',
+                ownerAddress = Call.caller,
+                description = description',
+                image = image'
+                }
+            
+            let id = getNumberOfHacks() + 1
+
+            put(state{lifeHacks[id] = newHack, numberOfHacks = id})
+
+            "Life hack created succesfully"
+
